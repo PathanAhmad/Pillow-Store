@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>PillowMart - Cart</title>
+    <title>pillloMart - Cart</title>
     <link rel="icon" href="img/favicon.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -53,7 +53,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="header_icon d-flex align-items-center">
+                        <div class="hearer_icon d-flex align-items-center">
                             <div class="dropdown cart">
                                 <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -122,37 +122,37 @@
 
     <!-- jQuery and other JS libraries -->
     <script src="js/jquery-1.12.1.min.js"></script>
-    <!-- Popper js -->
+    <!-- Popper JS -->
     <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
+    <!-- Bootstrap JS -->
     <script src="js/bootstrap.min.js"></script>
-    <!-- Easing js -->
+    <!-- Easing JS -->
     <script src="js/jquery.magnific-popup.js"></script>
-    <!-- Swiper js -->
+    <!-- Swiper JS -->
     <script src="js/swiper.min.js"></script>
-    <!-- Mixitup js -->
+    <!-- Mixitup JS -->
     <script src="js/mixitup.min.js"></script>
-    <!-- Owl carousel js -->
+    <!-- Owl Carousel JS -->
     <script src="js/owl.carousel.min.js"></script>
-    <!-- Nice-select js -->
+    <!-- Nice Select JS -->
     <script src="js/jquery.nice-select.min.js"></script>
-    <!-- Slick js -->
+    <!-- Slick JS -->
     <script src="js/slick.min.js"></script>
-    <!-- Counterup js -->
+    <!-- Counterup JS -->
     <script src="js/jquery.counterup.min.js"></script>
-    <!-- Waypoints js -->
+    <!-- Waypoints JS -->
     <script src="js/waypoints.min.js"></script>
-    <!-- Contact js -->
+    <!-- Contact JS -->
     <script src="js/contact.js"></script>
-    <!-- Ajaxchimp js -->
+    <!-- Ajaxchimp JS -->
     <script src="js/jquery.ajaxchimp.min.js"></script>
-    <!-- Form js -->
+    <!-- Form JS -->
     <script src="js/jquery.form.js"></script>
-    <!-- Validate js -->
+    <!-- Validate JS -->
     <script src="js/jquery.validate.min.js"></script>
-    <!-- Mail-script js -->
+    <!-- Mail-script JS -->
     <script src="js/mail-script.js"></script>
-    <!-- Custom js -->
+    <!-- Custom JS -->
     <script src="js/custom.js"></script>
 
     <script>
@@ -196,7 +196,7 @@
                         <td>
                             <div class="product_count">
                                 <span class="input-number-decrement" data-index="${index}"> <i class="ti-minus"></i></span>
-                                <input class="input-number" type="text" value="${item.quantity}" min="0" max="10" readonly>
+                                <input class="input-number" type="text" value="${item.quantity}" min="1" readonly>
                                 <span class="input-number-increment" data-index="${index}"> <i class="ti-plus"></i></span>
                             </div>
                         </td>
@@ -233,22 +233,24 @@
             }
 
             cartContainer.addEventListener('click', function(event) {
-                if (event.target.classList.contains('input-number-increment')) {
-                    const index = event.target.getAttribute('data-index');
+                const target = event.target;
+
+                if (target.classList.contains('input-number-increment')) {
+                    const index = target.getAttribute('data-index');
                     cart[index].quantity++;
                     saveCart();
                 }
 
-                if (event.target.classList.contains('input-number-decrement')) {
-                    const index = event.target.getAttribute('data-index');
+                if (target.classList.contains('input-number-decrement')) {
+                    const index = target.getAttribute('data-index');
                     if (cart[index].quantity > 1) {
                         cart[index].quantity--;
                         saveCart();
                     }
                 }
 
-                if (event.target.classList.contains('remove-item')) {
-                    const index = event.target.getAttribute('data-index');
+                if (target.classList.contains('remove-item')) {
+                    const index = target.getAttribute('data-index');
                     cart.splice(index, 1);
                     saveCart();
                 }
