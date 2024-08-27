@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>pillloMart - Cart</title>
+    <title>PillowMart - Cart</title>
     <link rel="icon" href="img/favicon.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -53,7 +53,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="hearer_icon d-flex align-items-center">
+                        <div class="header_icon d-flex align-items-center">
                             <div class="dropdown cart">
                                 <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,9 +103,10 @@
                                 <th scope="col">Price</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Total</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="cart-items">
                             <!-- Cart items will be dynamically inserted here -->
                         </tbody>
                     </table>
@@ -121,107 +122,139 @@
 
     <!-- jQuery and other JS libraries -->
     <script src="js/jquery-1.12.1.min.js"></script>
-    <!-- popper js -->
+    <!-- Popper js -->
     <script src="js/popper.min.js"></script>
-    <!-- bootstrap js -->
+    <!-- Bootstrap js -->
     <script src="js/bootstrap.min.js"></script>
-    <!-- easing js -->
+    <!-- Easing js -->
     <script src="js/jquery.magnific-popup.js"></script>
-    <!-- swiper js -->
+    <!-- Swiper js -->
     <script src="js/swiper.min.js"></script>
-    <!-- mixitup js -->
+    <!-- Mixitup js -->
     <script src="js/mixitup.min.js"></script>
-    <!-- owl carousel js -->
+    <!-- Owl carousel js -->
     <script src="js/owl.carousel.min.js"></script>
-    <!-- nice-select js -->
+    <!-- Nice-select js -->
     <script src="js/jquery.nice-select.min.js"></script>
-    <!-- slick js -->
+    <!-- Slick js -->
     <script src="js/slick.min.js"></script>
-    <!-- counterup js -->
+    <!-- Counterup js -->
     <script src="js/jquery.counterup.min.js"></script>
-    <!-- waypoints js -->
+    <!-- Waypoints js -->
     <script src="js/waypoints.min.js"></script>
-    <!-- contact js -->
+    <!-- Contact js -->
     <script src="js/contact.js"></script>
-    <!-- ajaxchimp js -->
+    <!-- Ajaxchimp js -->
     <script src="js/jquery.ajaxchimp.min.js"></script>
-    <!-- form js -->
+    <!-- Form js -->
     <script src="js/jquery.form.js"></script>
-    <!-- validate js -->
+    <!-- Validate js -->
     <script src="js/jquery.validate.min.js"></script>
-    <!-- mail-script js -->
+    <!-- Mail-script js -->
     <script src="js/mail-script.js"></script>
-    <!-- custom js -->
+    <!-- Custom js -->
     <script src="js/custom.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const cartContainer = document.querySelector('.table tbody');
+            const cartContainer = document.getElementById('cart-items');
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-            // Clear existing items
-            cartContainer.innerHTML = '';
+            function updateCart() {
+                cartContainer.innerHTML = '';
 
-            if (cart.length === 0) {
-                cartContainer.innerHTML = `
-                    <tr>
-                        <td colspan="4">Your cart is empty.</td>
-                    </tr>
+                if (cart.length === 0) {
+                    cartContainer.innerHTML = `
+                        <tr>
+                            <td colspan="5">Your cart is empty.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                let subtotal = 0;
+
+                cart.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    subtotal += itemTotal;
+
+                    const itemRow = document.createElement('tr');
+                    itemRow.innerHTML = `
+                        <td>
+                            <div class="media">
+                                <div class="d-flex">
+                                    <img src="img/product/${item.id}.png" alt="${item.name}" />
+                                </div>
+                                <div class="media-body">
+                                    <p>${item.name}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <h5>$${item.price.toFixed(2)}</h5>
+                        </td>
+                        <td>
+                            <div class="product_count">
+                                <span class="input-number-decrement" data-index="${index}"> <i class="ti-minus"></i></span>
+                                <input class="input-number" type="text" value="${item.quantity}" min="0" max="10" readonly>
+                                <span class="input-number-increment" data-index="${index}"> <i class="ti-plus"></i></span>
+                            </div>
+                        </td>
+                        <td>
+                            <h5>$${itemTotal.toFixed(2)}</h5>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger remove-item" data-index="${index}">Remove</button>
+                        </td>
+                    `;
+
+                    cartContainer.appendChild(itemRow);
+                });
+
+                const subtotalRow = document.createElement('tr');
+                subtotalRow.innerHTML = `
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <h5>Subtotal</h5>
+                    </td>
+                    <td>
+                        <h5>$${subtotal.toFixed(2)}</h5>
+                    </td>
+                    <td></td>
                 `;
-                return;
+
+                cartContainer.appendChild(subtotalRow);
             }
 
-            // Calculate total price
-            let subtotal = 0;
+            function saveCart() {
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
 
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
+            cartContainer.addEventListener('click', function(event) {
+                if (event.target.classList.contains('input-number-increment')) {
+                    const index = event.target.getAttribute('data-index');
+                    cart[index].quantity++;
+                    saveCart();
+                }
 
-                const itemRow = document.createElement('tr');
-                itemRow.innerHTML = `
-                    <td>
-                        <div class="media">
-                            <div class="d-flex">
-                                <img src="img/product/${item.id}.png" alt="${item.name}" />
-                            </div>
-                            <div class="media-body">
-                                <p>${item.name}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <h5>$${item.price.toFixed(2)}</h5>
-                    </td>
-                    <td>
-                        <div class="product_count">
-                            <span class="input-number-decrement"> <i class="ti-minus"></i></span>
-                            <input class="input-number" type="text" value="${item.quantity}" min="0" max="10" readonly>
-                            <span class="input-number-increment"> <i class="ti-plus"></i></span>
-                        </div>
-                    </td>
-                    <td>
-                        <h5>$${itemTotal.toFixed(2)}</h5>
-                    </td>
-                `;
+                if (event.target.classList.contains('input-number-decrement')) {
+                    const index = event.target.getAttribute('data-index');
+                    if (cart[index].quantity > 1) {
+                        cart[index].quantity--;
+                        saveCart();
+                    }
+                }
 
-                cartContainer.appendChild(itemRow);
+                if (event.target.classList.contains('remove-item')) {
+                    const index = event.target.getAttribute('data-index');
+                    cart.splice(index, 1);
+                    saveCart();
+                }
             });
 
-            // Update subtotal
-            const subtotalRow = document.createElement('tr');
-            subtotalRow.innerHTML = `
-                <td></td>
-                <td></td>
-                <td>
-                    <h5>Subtotal</h5>
-                </td>
-                <td>
-                    <h5>$${subtotal.toFixed(2)}</h5>
-                </td>
-            `;
-
-            cartContainer.appendChild(subtotalRow);
+            updateCart();
         });
     </script>
 </body>
